@@ -1,14 +1,19 @@
 node {
-    stage('Git Checkout') { // for display purposes
+    stage('Code Checkout') { // for display purposes
      echo 'Checout Code and clone it inside jenkins workspace.'
-     git 'https://github.com/padmaavathy/maven_apps.git'
+     git 'https://github.com/itrainavengers/maven_apps.git'
    }
    stage('Build Test & Package') {
       echo 'Build the package'
-      sh 'mvn clean compile package'
+      withMaven(jdk: 'JDK-1.8', maven: 'Maven-3.6.1') {
+       sh 'mvn clean compile'
+     }
    }
-   stage('Results') {
-       echo 'Test Results are reported..'
+   stage('Artifacts') {
+       echo 'package the project artifacts..'
+       withMaven(jdk: 'JDK-1.8', maven: 'Maven-3.6.1') {
+       sh 'mvn package'
+     }
    
    }
    stage('Deploy to Dev'){
